@@ -26,7 +26,7 @@ How it works:
 
 The OutputCodeClassifier class in scikit-learn takes two main parameters: the base estimator that will be used for the binary classifiers (which can be any classifier that supports binary classification), and the code size, which determines the length of the binary codes.
 
-Example: 
+#### Example: 
 
 - train an OutputCodeClassifier on the iris dataset and print the predictions for the training data:
 
@@ -48,3 +48,71 @@ clf.fit(X, y)
 print(clf.predict(X))
 ```
 
+#### Use cases
+
+In each of the following three examples, the OutputCodeClassifier is used to solve a multiclass classification problem by reducing it to multiple binary classification problems.
+
+
+##### 1. Text Classification: Suppose we have a corpus of documents and we want to classify them into multiple categories.
+
+```python
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.multiclass import OutputCodeClassifier
+from sklearn.svm import LinearSVC
+
+# Load the dataset
+categories = ['alt.atheism', 'comp.graphics', 'sci.space']
+newsgroups_train = fetch_20newsgroups(subset='train', categories=categories)
+
+# Vectorize the text data
+vectorizer = TfidfVectorizer()
+X_train = vectorizer.fit_transform(newsgroups_train.data)
+y_train = newsgroups_train.target
+
+# Create and train the classifier
+clf = OutputCodeClassifier(LinearSVC(random_state=0), code_size=2, random_state=0)
+clf.fit(X_train, y_train)
+```
+
+##### 2. Image Classification: Suppose we have a dataset of images and we want to classify them into multiple categories.
+
+```python
+from sklearn.datasets import load_digits
+from sklearn.multiclass import OutputCodeClassifier
+from sklearn.svm import LinearSVC
+
+# Load the digits dataset
+digits = load_digits()
+X, y = digits.data, digits.target
+
+# Create and train the classifier
+clf = OutputCodeClassifier(LinearSVC(random_state=0), code_size=2, random_state=0)
+clf.fit(X, y)
+```
+
+##### 3. Predicting Medical Conditions: Suppose we have a dataset of patient records and we want to predict whether a patient has one of several possible medical conditions.
+
+```python
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.multiclass import OutputCodeClassifier
+from sklearn.svm import LinearSVC
+
+# Load the breast cancer dataset
+cancer = load_breast_cancer()
+X, y = cancer.data, cancer.target
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
+
+# Standardize the data
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Create and train the classifier
+clf = OutputCodeClassifier(LinearSVC(random_state=0), code_size=2, random_state=0)
+clf.fit(X_train_scaled, y_train)
+```
