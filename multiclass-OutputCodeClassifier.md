@@ -55,6 +55,8 @@ In each of the following three examples, the OutputCodeClassifier is used to sol
 
 ##### 1. Text Classification: Suppose we have a corpus of documents and we want to classify them into multiple categories.
 
+In this scenario, we have a collection of text documents and our goal is to categorize each document into one of several predefined categories. This is a common task in many areas such as news categorization, email spam detection, sentiment analysis, and more. In the provided code, we use the fetch_20newsgroups dataset from scikit-learn, which is a collection of approximately 20,000 newsgroup documents, partitioned across 20 different newsgroups. We then use the TfidfVectorizer to convert the raw documents into a matrix of TF-IDF features, which can be used as input to our classifier. The OutputCodeClassifier is then trained on this data, learning to predict the category of a new document.
+
 ```python
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -77,6 +79,8 @@ clf.fit(X_train, y_train)
 
 ##### 2. Image Classification: Suppose we have a dataset of images and we want to classify them into multiple categories.
 
+In this use case, we have a collection of images and our goal is to classify each image into one of several predefined categories. This is a common task in computer vision, with applications ranging from facial recognition to autonomous driving. In the provided code, we use the load_digits dataset from scikit-learn, which is a collection of 8x8 images of digits. Each pixel in the image is treated as a feature, and the OutputCodeClassifier is trained on these features to predict the digit represented by a new image.
+
 ```python
 from sklearn.datasets import load_digits
 from sklearn.multiclass import OutputCodeClassifier
@@ -92,6 +96,8 @@ clf.fit(X, y)
 ```
 
 ##### 3. Predicting Medical Conditions: Suppose we have a dataset of patient records and we want to predict whether a patient has one of several possible medical conditions.
+
+In this scenario, we have a dataset of patient records and our goal is to predict whether a patient has one of several possible medical conditions. This is a common task in healthcare, where machine learning can be used to assist doctors in diagnosing diseases. In the provided code, we use the load_breast_cancer dataset from scikit-learn, which is a collection of features computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. The features describe characteristics of the cell nuclei present in the image. The OutputCodeClassifier is trained on these features to predict whether a new patient has a malignant or benign tumor.
 
 ```python
 from sklearn.datasets import load_breast_cancer
