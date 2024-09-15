@@ -1,3 +1,70 @@
+```python
+pipeline = Pipeline([
+    ('numerical', numeric_transformer, selected_numerical_columns),
+    ('categorical', categorical_transformer, selected_categorical_columns),
+    ('date', date_transformer, ['date_column']),
+    ('interaction', interaction_transformer, ['category_column', 'numeric_column']),
+    ('estimator', RandomForestRegressor())
+])
+
+# vs 
+
+pipeline = Pipeline([
+    ('preprocessor', ColumnTransformer([
+        ('numerical', numeric_transformer, selected_numerical_columns),
+        ('categorical', categorical_transformer, selected_categorical_columns),
+        ('date', date_transformer, ['date_column']),
+        ('interaction', interaction_transformer, ['category_column', 'numeric_column'])
+    ])),
+    ('estimator', RandomForestRegressor())
+])
+
+```
+You're on the right track, but there's a small adjustment needed to make this work correctly. The structure you've proposed combines the ColumnTransformer steps directly into the main Pipeline, 
+which isn't quite how scikit-learn's Pipeline and ColumnTransformer are designed to work together. However, we can achieve something very similar with a slight modification. Here's how we can rewrite it:
+
+
+
+```python
+from sklearn.preprocessing import PolynomialFeatures, FunctionTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.base import BaseEstimator, TransformerMixin
+import pandas as pd
+import numpy as np
+
+# Assume WeekendTransformer and InteractionTransformer are defined as before
+
+pipeline = Pipeline([
+    ('preprocessor', ColumnTransformer([
+        ('numerical', numeric_transformer, selected_numerical_columns),
+        ('categorical', categorical_transformer, selected_categorical_columns),
+        ('date', date_transformer, ['date_column']),
+        ('interaction', interaction_transformer, ['category_column', 'numeric_column'])
+    ])),
+    ('estimator', RandomForestRegressor())
+])
+
+```
+
+In this version:
+
+1. We've kept the ColumnTransformer, but we've made it a single step in the main Pipeline named 'preprocessor'.
+2. All the individual transformers (numerical, categorical, date, interaction) are now part of this ColumnTransformer.
+3. The RandomForestRegressor is the final step in the main Pipeline, as before.
+
+This structure maintains the correct flow of data through the transformers and then into the estimator, while simplifying the overall pipeline definition.
+
+The key difference from your proposed structure is that we still need the ColumnTransformer to properly handle the column-specific transformations. The ColumnTransformer is designed to apply different transformations to different subsets of the features, which is exactly what we need here.
+
+This approach gives you a more concise pipeline definition while still maintaining the full functionality of your feature engineering steps. It's a good balance between readability and proper use of scikit-learn's API.
+
+Is this structure what you were aiming for? Would you like me to explain any part of it in more detail?
+
+
 ## I have these sklearn transformers of column. Can you give example of adding feature engineering 
 
 ```python
