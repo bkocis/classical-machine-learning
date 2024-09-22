@@ -88,3 +88,17 @@ Include a glossary of key terms related to GroupBy and data manipulation. This c
 12. Cross-reference with Pandas documentation
 Include links to relevant Pandas documentation throughout the article. This allows readers to easily access more detailed information if needed.
 
+
+
+
+
+--- 
+
+References: 
+
+
+[1] https://pypi.org/project/ydata-profiling/
+[3] https://jakevdp.github.io/PythonDataScienceHandbook/03.08-aggregation-and-grouping.html
+[4] https://jakevdp.github.io/PythonDataScienceHandbook/03.09-pivot-tables.html
+[5] https://maxhalford.github.io/blog/pandas-streaming-groupby/
+[6] https://www.kaggle.com/c/PLAsTiCC-2018/leaderboard
