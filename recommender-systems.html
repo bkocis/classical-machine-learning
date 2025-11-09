@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comprehensive Tutorial on Advanced Machine Learning Ranking Methods</title>
+  <style>
+    /* Minimal, Medium-safe defaults */
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #111; margin: 0; padding: 32px; }
+    main { max-width: 850px; margin: 0 auto; }
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { font-size: 2.2rem; margin-top: 0; }
+    h2 { font-size: 1.6rem; margin-top: 2.2rem; }
+    h3 { font-size: 1.25rem; margin-top: 1.6rem; }
+    p { margin: 0.8rem 0; }
+    ul, ol { padding-left: 1.2rem; }
+    hr { border: 0; height: 1px; background: #eee; margin: 24px 0; }
+    strong { font-weight: 700; }
+    em { font-style: italic; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.95em; }
+    pre { background: #f6f8fa; padding: 16px; border-radius: 8px; overflow: auto; }
+    pre code { white-space: pre; }
+    .emoji { font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"; }
+    .muted { color: #555; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+<main>
+  <h1><strong>Comprehensive Tutorial on Advanced Machine Learning Ranking Methods</strong></h1>
+
+  <hr />
+
+  <h2><strong>Chapter 1: Learning to Rank (LTR) - Detailed Explanation</strong></h2>
+
+  <h3 class="emoji">🧠 What Is Learning to Rank?</h3>
+  <p>Learning to Rank (LTR) is a type of machine learning technique used to automatically construct ranking models — typically for:</p>
+  <ul>
+    <li>Search engines (ranking documents for a query)</li>
+    <li>Recommendation systems</li>
+    <li>Online advertising (ranking ads by relevance)</li>
+    <li>E-commerce (ranking products by likelihood of purchase)</li>
+  </ul>
+  <p>Instead of manually designing ranking heuristics like TF-IDF, LTR <strong>learns</strong> how to order items using training data that reflects user preferences or relevance.</p>
+
+  <hr />
+
+  <h3>🎯 The Core Idea</h3>
+  <p>The goal is to learn a <strong>scoring function f(x)</strong> that assigns a numerical relevance score to each item given a query, so that higher scores correspond to higher relevance.</p>
+  <p>Then, for each query, we <strong>sort</strong> items by their predicted scores to produce the ranking.</p>
+
+  <hr />
+
+  <h3>📊 The Three Main Approaches</h3>
+  <p><strong>1. Pointwise</strong></p>
+  <ul>
+    <li>Treats each document independently.</li>
+    <li>Model predicts an absolute relevance score (regression or classification).</li>
+    <li>Examples: Logistic Regression, Linear Regression.</li>
+    <li><strong>Pros:</strong> Simple and intuitive.</li>
+    <li><strong>Cons:</strong> Ignores relationships between documents.</li>
+  </ul>
+  <p><strong>2. Pairwise</strong></p>
+  <ul>
+    <li>Learns to compare two items and decide which should rank higher.</li>
+    <li>Examples: RankNet, SVMRank.</li>
+    <li><strong>Pros:</strong> Optimizes relative order.</li>
+    <li><strong>Cons:</strong> Computationally expensive (O(n²) comparisons).</li>
+  </ul>
+  <p><strong>3. Listwise</strong></p>
+  <ul>
+    <li>Considers the entire list at once.</li>
+    <li>Examples: LambdaMART, ListNet.</li>
+    <li><strong>Pros:</strong> Directly optimizes ranking metrics.</li>
+    <li><strong>Cons:</strong> Computationally complex.</li>
+  </ul>
+
+  <hr />
+
+  <h3>⚙️ Typical Pipeline</h3>
+  <ol>
+    <li><strong>Feature Extraction</strong> — Build query-document features (TF-IDF, click data, etc.)</li>
+    <li><strong>Labeling</strong> — Use user interactions or human judgments</li>
+    <li><strong>Model Training</strong> — Algorithms like XGBoost, LambdaMART, RankNet</li>
+    <li><strong>Evaluation</strong> — Metrics: NDCG, MAP, Precision@k</li>
+    <li><strong>Deployment</strong> — Rank new items at runtime</li>
+  </ol>
+
+  <hr />
+
+  <h3>🧩 Example: LambdaMART</h3>
+  <p>LambdaMART combines <strong>LambdaRank</strong> (pairwise gradients) with <strong>MART</strong> (Gradient Boosted Decision Trees). It learns gradients (“lambdas”) that improve NDCG directly and is widely used in search and recommendation systems.</p>
+
+  <hr />
+
+  <h3>🧠 Neural Learning-to-Rank</h3>
+  <ul>
+    <li><strong>Cross-encoders</strong>: jointly encode query + document</li>
+    <li><strong>Bi-encoders</strong>: encode them separately and compare embeddings</li>
+  </ul>
+  <p>These capture semantic meaning and user intent better than traditional features.</p>
+
+  <hr />
+
+  <h3>📈 Example Use Case: Hotel Search</h3>
+  <p><strong>Query:</strong> “family-friendly hotels in Berlin”</p>
+  <p><strong>Features:</strong> text match, rating, price, distance, amenities</p>
+  <p><strong>Model Output:</strong> ranks hotels by predicted relevance or conversion likelihood</p>
+
+  <hr />
+
+  <h3>📚 Summary</h3>
+  <p><strong>Pointwise:</strong> simple but ignores context</p>
+  <p><strong>Pairwise:</strong> optimizes relative order</p>
+  <p><strong>Listwise:</strong> directly optimizes ranking metric</p>
+
+  <hr />
+
+  <h2><strong>Chapter 2: Matrix Factorization for Collaborative Filtering</strong></h2>
+
+  <h3>🧩 The Basic Idea</h3>
+  <p>Matrix factorization is one of the most widely used techniques in collaborative filtering — especially in recommendation systems. It helps uncover <strong>latent factors</strong> that explain observed user–item interactions.</p>
+  <p>Given a user–item matrix R, the model assumes:</p>
+  <p><strong>R<sub>ui</sub> ≈ p<sub>u</sub><sup>T</sup> q<sub>i</sub></strong></p>
+  <p>where:</p>
+  <ul>
+    <li><strong>p<sub>u</sub></strong> is a latent feature vector for user u</li>
+    <li><strong>q<sub>i</sub></strong> is a latent feature vector for item i</li>
+  </ul>
+  <p>The goal is to learn these vectors so their dot product approximates the known ratings.</p>
+
+  <hr />
+
+  <h3>⚙️ The Optimization Objective</h3>
+  <p>We minimize reconstruction error for known ratings:</p>
+  <p><strong>min<sub>P,Q</sub> Σ (R<sub>ui</sub> - p<sub>u</sub><sup>T</sup> q<sub>i</sub>)² + λ (||p<sub>u</sub>||² + ||q<sub>i</sub>||²)</strong></p>
+  <ul>
+    <li>K = set of observed user–item pairs</li>
+    <li>λ = regularization term</li>
+  </ul>
+  <p>Optimization is typically done with <strong>Stochastic Gradient Descent (SGD)</strong> or <strong>Alternating Least Squares (ALS)</strong>.</p>
+
+  <hr />
+
+  <h3>🧠 Intuition Behind Latent Factors</h3>
+  <p>Matrix factorization uncovers hidden features describing both users and items.</p>
+  <ul>
+    <li>For movies: latent factors might represent <em>genre preference</em> or <em>complexity</em>.</li>
+    <li>A user vector captures preferences across these dimensions.</li>
+    <li>An item vector captures how strongly it exhibits each factor.</li>
+    <li>The dot product predicts how much the user will like the item.</li>
+  </ul>
+
+  <hr />
+
+  <h3>📈 Variants and Extensions</h3>
+  <ul>
+    <li><strong>SVD (Singular Value Decomposition)</strong> – works well for dense matrices.</li>
+    <li><strong>FunkSVD</strong> – practical model optimized via SGD (used in Netflix Prize).</li>
+    <li><strong>Biased MF Model</strong> – adds bias terms for user/item tendencies: R<sub>ui</sub> = μ + b<sub>u</sub> + b<sub>i</sub> + p<sub>u</sub><sup>T</sup> q<sub>i</sub></li>
+    <li><strong>Implicit Feedback MF</strong> – handles binary or confidence-weighted data (clicks, views).</li>
+  </ul>
+
+  <hr />
+
+  <h3>🧮 Example (Python)</h3>
+  <pre><code>import numpy as np
+
+num_users, num_items = R.shape
+k = 10
+P = np.random.rand(num_users, k)
+Q = np.random.rand(num_items, k)
+
+for u, i, r_ui in known_ratings:
+    err = r_ui - np.dot(P[u], Q[i])
+    P[u] += lr * (err * Q[i] - lambda_ * P[u])
+    Q[i] += lr * (err * P[u] - lambda_ * Q[i])</code></pre>
+
+  <hr />
+
+  <h3>🚀 Advantages</h3>
+  <ul>
+    <li>Scales to large datasets</li>
+    <li>Captures low-dimensional patterns</li>
+    <li>Easily extendable (biases, hybrid models, etc.)</li>
+  </ul>
+
+  <h3>⚠️ Limitations</h3>
+  <ul>
+    <li>Struggles with cold start (new users/items)</li>
+    <li>Requires tuning for regularization and dimension size</li>
+    <li>May miss nonlinear interactions (deep learning handles these better)</li>
+  </ul>
+
+  <hr />
+
+  <h2><strong>Chapter 3: Ranking Evaluation Metrics Explained</strong></h2>
+
+  <h3>1. Precision@k</h3>
+  <p><strong>Purpose:</strong> Measures how many of the top-k retrieved items are relevant.</p>
+  <p><strong>Formula:</strong> Precision@k = (# of relevant items in top k) / k</p>
+  <p><strong>Example:</strong> If the top-5 retrieved documents contain 3 relevant ones → Precision@5 = 0.6</p>
+  <p><strong>Interpretation:</strong></p>
+  <ul>
+    <li>Higher is better</li>
+    <li>Easy to interpret</li>
+    <li>Doesn’t consider order among top-k items</li>
+  </ul>
+
+  <hr />
+
+  <h3>2. MAP (Mean Average Precision)</h3>
+  <p><strong>Purpose:</strong> Evaluates ranking across multiple queries, considering precision at each relevant position.</p>
+  <p><strong>Formulas:</strong></p>
+  <ul>
+    <li>Average Precision (AP) = (1/R) × Σ [P@k × rel(k)]</li>
+    <li>Mean Average Precision (MAP) = (1/Q) × Σ [AP(q)]</li>
+  </ul>
+  <p><strong>Example:</strong> AP = [0.8, 0.6, 1.0] → MAP = 0.8</p>
+  <p><strong>Interpretation:</strong></p>
+  <ul>
+    <li>Considers ranking order</li>
+    <li>Rewards early relevance</li>
+    <li>Common in retrieval benchmarks</li>
+  </ul>
+
+  <hr />
+
+  <h3>3. NDCG (Normalized Discounted Cumulative Gain)</h3>
+  <p><strong>Purpose:</strong> Measures ranking quality when items have graded relevance.</p>
+  <p><strong>Formulas:</strong></p>
+  <ul>
+    <li>DCG@k = Σ [(2^rel<sub>i</sub> - 1) / log<sub>2</sub>(i + 1)]</li>
+    <li>NDCG@k = DCG@k / IDCG@k</li>
+  </ul>
+  <p><strong>Example:</strong> DCG@5 = 7.0, IDCG@5 = 10.0 → NDCG@5 = 0.7</p>
+  <p><strong>Interpretation:</strong></p>
+  <ul>
+    <li>Captures position sensitivity and graded relevance</li>
+    <li>Widely used in search and recommendation systems</li>
+  </ul>
+
+  <hr />
+
+  <h2><strong>Chapter 4: Understanding XGBoost and LightGBM</strong></h2>
+
+  <h3>🌳 Gradient Boosting — The Core Idea</h3>
+  <p><strong>Goal:</strong> Combine many weak learners (usually shallow trees) into a strong model.</p>
+  <p><strong>How it works:</strong></p>
+  <ol>
+    <li>Start with a simple model (like mean prediction).</li>
+    <li>Compute residuals (errors).</li>
+    <li>Fit a new tree to predict residuals.</li>
+    <li>Add new tree predictions to the existing model (scaled by learning rate).</li>
+    <li>Repeat many times — each tree fixes prior mistakes.</li>
+  </ol>
+  <p>Essentially, this is <strong>gradient descent over decision trees</strong>.</p>
+
+  <hr />
+
+  <h3>⚙️ XGBoost (Extreme Gradient Boosting)</h3>
+  <p>Developed by Tianqi Chen (2014), XGBoost is a highly optimized and regularized version of gradient boosting.</p>
+  <p><strong>Key Features</strong></p>
+  <ul>
+    <li>Regularization (L1, L2)</li>
+    <li>Second-order optimization</li>
+    <li>Tree pruning (max_depth, gamma)</li>
+    <li>Handles missing data</li>
+    <li>Parallel and distributed computing</li>
+  </ul>
+  <p><strong>Use Cases</strong></p>
+  <ul>
+    <li>Kaggle competitions</li>
+    <li>Credit scoring</li>
+    <li>Forecasting</li>
+    <li>Feature importance analysis</li>
+  </ul>
+
+  <hr />
+
+  <h3>⚡ LightGBM (Light Gradient Boosting Machine)</h3>
+  <p>Developed by Microsoft Research (2017), LightGBM focuses on speed and scalability.</p>
+  <p><strong>Innovations</strong></p>
+  <ul>
+    <li>Leaf-wise tree growth</li>
+    <li>Histogram-based algorithm</li>
+    <li>Gradient-based One-Side Sampling (GOSS)</li>
+    <li>Exclusive Feature Bundling (EFB)</li>
+    <li>Distributed training</li>
+  </ul>
+  <p><strong>Typical Parameters</strong></p>
+  <ul>
+    <li>num_leaves, max_depth, learning_rate</li>
+    <li>feature_fraction, bagging_fraction</li>
+    <li>boosting_type = “gbdt”, “dart”, or “goss”</li>
+  </ul>
+
+  <hr />
+
+  <h3>🧩 Comparison Summary</h3>
+  <p><strong>XGBoost</strong></p>
+  <ul>
+    <li>Level-wise tree growth</li>
+    <li>Slower but stable</li>
+    <li>Lower overfitting risk</li>
+  </ul>
+  <p><strong>LightGBM</strong></p>
+  <ul>
+    <li>Leaf-wise tree growth</li>
+    <li>Faster on large data</li>
+    <li>Slightly higher overfitting risk</li>
+  </ul>
+
+  <hr />
+
+  <h3>🧠 When to Use Which</h3>
+  <ul>
+    <li><strong>XGBoost:</strong> for stability, interpretability, and smaller datasets</li>
+    <li><strong>LightGBM:</strong> for speed and massive datasets</li>
+  </ul>
+
+  <hr />
+
+  <p class="muted"><em>Generated with ChatGPT (GPT-5) — November 2025</em></p>
+</main>
+</body>
+</html>
